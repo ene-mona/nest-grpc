@@ -4,10 +4,13 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TodoModule } from './todo/todo.module';
 import "dotenv/config"
+import { ClientsModule, Transport } from '@nestjs/microservices';
+import { join } from 'path';
 
 
 @Module({
   imports: [
+  
     TypeOrmModule.forRoot(
       {
       type: 'mysql',

@@ -8,18 +8,19 @@ import { join } from 'path';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Todo]),
     ClientsModule.register([
       {
-        name: 'TEDDY_TODO_PACKAGE',
+        name: 'TODO_SERVICE',
         transport: Transport.GRPC,
         options: {
           package: 'todo',
-          protoPath: join(__dirname, '../../../proto/teddy.proto'),
-          url: 'nest-grpc-production.up.railway.app:50051',
+          protoPath: join(__dirname, '../../../proto/todo.proto'),
+          url: 'localhost:50052', //colleagues
         },
       },
     ]),
+    TypeOrmModule.forFeature([Todo]),
+
 ],
   providers: [TodoService],
   controllers: [TodoController]
