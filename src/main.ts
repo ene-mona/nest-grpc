@@ -17,7 +17,7 @@ async function bootstrap() {
     options: {
       package: 'todo',
       protoPath: join(__dirname, '../../proto/todo.proto'),
-      url: `localhost:${GRPC_PORT}`,
+      url: `0.0.0.0:${GRPC_PORT}`,
     },
   });
 
