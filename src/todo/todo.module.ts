@@ -16,7 +16,7 @@ import { join } from 'path';
         options: {
           package: 'todo',
           protoPath: join(__dirname, '../../../proto/teddy.proto'),
-          url: 'https://todo-app-o3a4.onrender.com:443',
+          url: 'nest-grpc-production.up.railway.app:50051',
         },
       },
     ]),
