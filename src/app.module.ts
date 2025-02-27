@@ -3,19 +3,19 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TodoModule } from './todo/todo.module';
-import { ClientsModule, Transport } from '@nestjs/microservices';
-import { join } from 'path';
+import "dotenv/config"
+
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(
       {
       type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username:'root',
-      password: '08147343536Abe',
-      database: 'todo_db',
+      host: process.env.DB_HOST,
+      port: +(process.env.DB_PORT ?? 3306),
+      username:process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
       // entities: [__dirname + '/**/*.entity{.ts,.js}'],
       autoLoadEntities: true,  // setting this to true will load entities automatically from the entities folder
       // logging: true, // setting this to true will log SQL queries in the console
