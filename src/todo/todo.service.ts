@@ -5,11 +5,12 @@ import { Todo } from './entities/todo.entity';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { ClientGrpc } from '@nestjs/microservices';
 import { map, Observable,} from 'rxjs';
-import { Empty, TODO_SERVICE_NAME, TodoServiceClient } from 'proto/todo';
+import { COLLEAGUE_TODO_SERVICE_NAME, ColleagueTodoServiceClient, Empty } from 'proto/teddy';
+
 
 @Injectable()
 export class TodoService implements OnModuleInit {
-  private colleagueTodoService: TodoServiceClient; 
+  private colleagueTodoService: ColleagueTodoServiceClient; 
 
   constructor(
     @Inject('TEDDY_TODO_PACKAGE') private readonly colleagueClient: ClientGrpc, 
@@ -17,9 +18,12 @@ export class TodoService implements OnModuleInit {
   ) {}
 
   onModuleInit() {
-    this.colleagueTodoService = this.colleagueClient.getService<TodoServiceClient>(TODO_SERVICE_NAME);
+    this.colleagueTodoService = this.colleagueClient.getService<ColleagueTodoServiceClient>(COLLEAGUE_TODO_SERVICE_NAME);
   }
 
+  
+
+  
   async findAll(): Promise<{ todos: Todo[] }> {
     const todos = await this.todoRepository.find();
     return { todos };

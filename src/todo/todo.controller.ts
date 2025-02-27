@@ -37,7 +37,7 @@ export class TodoController {
     }
 
     @Get('/colleague')
-    getTodosFromColleague(_: Empty): Observable<{ todos: Todo[] }> { // ✅ Change return type to Observable
+    getTodosFromColleague(_: Empty): Observable<{ todos: Todo[] }> { 
         return this.todoService.getTodosFromColleague();
     }
     

@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package todo;
 
-service TodoService {
+service ColleagueTodoService {
     rpc CreateTodo(CreateTodoDto) returns (Todo) {}
     rpc GetTodos(Empty) returns (Todos) {}
     rpc GetTodoById(TodoByIdDto) returns (Todo) {}

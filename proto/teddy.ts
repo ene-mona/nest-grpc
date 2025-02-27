@@ -39,7 +39,7 @@ export interface TodoByIdDto {
 
 export const TODO_PACKAGE_NAME = "todo";
 
-export interface TodoServiceClient {
+export interface ColleagueTodoServiceClient {
   createTodo(request: CreateTodoDto): Observable<Todo>;
 
   getTodos(request: Empty): Observable<Todos>;
@@ -51,7 +51,7 @@ export interface TodoServiceClient {
   deleteTodoById(request: TodoByIdDto): Observable<Empty>;
 }
 
-export interface TodoServiceController {
+export interface ColleagueTodoServiceController {
   createTodo(request: CreateTodoDto): Promise<Todo> | Observable<Todo> | Todo;
 
   getTodos(request: Empty): Promise<Todos> | Observable<Todos> | Todos;
@@ -63,19 +63,19 @@ export interface TodoServiceController {
   deleteTodoById(request: TodoByIdDto): Promise<Empty> | Observable<Empty> | Empty;
 }
 
-export function TodoServiceControllerMethods() {
+export function ColleagueTodoServiceControllerMethods() {
   return function (constructor: Function) {
     const grpcMethods: string[] = ["createTodo", "getTodos", "getTodoById", "updateTodoById", "deleteTodoById"];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
-      GrpcMethod("TodoService", method)(constructor.prototype[method], method, descriptor);
+      GrpcMethod("ColleagueTodoService", method)(constructor.prototype[method], method, descriptor);
     }
     const grpcStreamMethods: string[] = [];
     for (const method of grpcStreamMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
-      GrpcStreamMethod("TodoService", method)(constructor.prototype[method], method, descriptor);
+      GrpcStreamMethod("ColleagueTodoService", method)(constructor.prototype[method], method, descriptor);
     }
   };
 }
 
-export const TODO_SERVICE_NAME = "TodoService";
+export const COLLEAGUE_TODO_SERVICE_NAME = "ColleagueTodoService";
