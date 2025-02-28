@@ -5,7 +5,7 @@ import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { join } from 'path';
 
 async function bootstrap() {
-  const PORT = process.env.PORT ?? 3000;  
+  const PORT = process.env.PORT ?? 3001;  
   const GRPC_PORT = process.env.GPRC_PORT ?? 50051  //
 
  
