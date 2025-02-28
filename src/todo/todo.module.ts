@@ -15,7 +15,7 @@ import { join } from 'path';
         options: {
           package: 'todo',
           protoPath: join(__dirname, '../../../proto/todo.proto'),
-          url: 'https://nest-todo-2.onrender.com:50052', //colleagues
+          url: '0:0:0:0:50052', //colleagues
         },
       },
     ]),
