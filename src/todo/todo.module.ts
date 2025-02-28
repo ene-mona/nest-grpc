@@ -15,7 +15,7 @@ import { join } from 'path';
         options: {
           package: 'todo',
           protoPath: join(__dirname, '../../../proto/todo.proto'),
-          url: '0:0:0:0:50052', //colleagues
+          url: 'nest-todo-2-production.up.railway.app:8080', //colleagues
         },
       },
     ]),
