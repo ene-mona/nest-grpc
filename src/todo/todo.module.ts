@@ -16,7 +16,7 @@ import { join } from 'path';
           package: 'todo',
           protoPath: join(__dirname, '../../../proto/todo.proto'),
           //url: 'localhost:50052', //colleagues
-           url:'0:0:0:0:50052',
+           url:'dns:///0:0:0:0:50052',
           // credentials: credentials.createSsl(),
           
         },
