@@ -5,7 +5,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Todo } from './entities/todo.entity';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { join } from 'path';
-import { credentials } from '@grpc/grpc-js';
 
 @Module({
   imports: [
