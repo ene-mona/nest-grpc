@@ -16,9 +16,13 @@ import { join } from 'path';
           package: 'todo',
           protoPath: join(__dirname, '../../../proto/todo.proto'),
           //url: 'localhost:50052', //colleagues
-           url:'0:0:0:0:50052',
+           url:'dns:///nest-todo-2-production.up.railway.app:50052',
           // credentials: credentials.createSsl(),
-          
+          credentials: require('@grpc/grpc-js').credentials.createSsl(),
+          channelOptions: {
+            'grpc.max_receive_message_length': 1024 * 1024 * 100, // 100MB
+            'grpc.keepalive_time_ms': 120000, // 2 minutes
+          },
         },
       },
     ]),
