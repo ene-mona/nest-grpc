@@ -17,7 +17,7 @@ import { credentials } from '@grpc/grpc-js';
           package: 'todo',
           protoPath: join(__dirname, '../../../proto/todo.proto'),
           //url: 'localhost:50052', //colleagues
-           url:'nest-todo-2-production.up.railway.app:3002',
+           url:'nest-todo-2-production.up.railway.app:50052',
           // credentials: credentials.createSsl(),
           
         },
