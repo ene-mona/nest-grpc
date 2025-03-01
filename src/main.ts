@@ -22,7 +22,7 @@ async function bootstrap() {
       },
       package: 'todo',
       protoPath: join(__dirname, '../../proto/todo.proto'),
-      url: `0.0.0.0:${GRPC_PORT}`,  
+      url: `dns:///0.0.0.0:${GRPC_PORT}`,  
     },
   });
 
