@@ -1,4 +1,4 @@
-import { Controller } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { TodoService } from './todo.service';
 import { Todo } from './entities/todo.entity';
 import { DeleteResult, UpdateResult } from 'typeorm';
@@ -6,7 +6,8 @@ import { CreateTodoDto, FindOneParams, UpdateTodoDto } from './dto';
 import { GrpcMethod } from '@nestjs/microservices';
 import { Empty } from 'proto/todo';
 
-@Controller()
+
+@Controller('todos')
 export class TodoController {
     constructor(private readonly todoService: TodoService) {}
 
@@ -36,29 +37,29 @@ export class TodoController {
         return this.todoService.deleteById(params.id);
     }
 
-    // Remote CRUD Operations (gRPC calls to the other microservice)
-    @GrpcMethod('TodoService', 'CreateRemoteTodo')
-    createRemoteTodo(payload: CreateTodoDto): Promise<Todo> {
-        return this.todoService.createRemoteTodo(payload.title);
+    @Post('create')
+    createRemoteTodo(@Body() createTodoDto: CreateTodoDto): Promise<Todo> {
+        const { title } = createTodoDto;
+        return this.todoService.createRemoteTodo(title);
     }
 
-    @GrpcMethod('TodoService', 'GetRemoteTodos')
+    @Get()
     getRemoteTodos(_: Empty): Promise<{ todos: Todo[] }> {
         return this.todoService.getRemoteTodos();
     }
 
-    @GrpcMethod('TodoService', 'GetRemoteTodoById')
-    getRemoteTodoById(params: FindOneParams): Promise<Todo> {
+    @Get(':id')
+    getRemoteTodoById(@Param('id') params: FindOneParams): Promise<Todo> {
         return this.todoService.getRemoteTodoById(params.id);
     }
 
-    @GrpcMethod('TodoService', 'UpdateRemoteTodoById')
-    updateRemoteTodoById(payload: UpdateTodoDto): Promise<void> {
-        return this.todoService.updateRemoteTodoById(payload.id, payload.title ?? '', payload.completed);
+    @Post(':id')
+    updateRemoteTodoById(@Param('id') params: FindOneParams, @Body() payload: UpdateTodoDto): Promise<void> {
+        return this.todoService.updateRemoteTodoById(params.id, payload.title ?? '', payload.completed);
     }
 
-    @GrpcMethod('TodoService', 'DeleteRemoteTodoById')
-    deleteRemoteTodoById(params: FindOneParams): Promise<void> {
+    @Delete(':id')
+    deleteRemoteTodoById(@Param('id') params: FindOneParams): Promise<void> {
         return this.todoService.deleteRemoteTodoById(params.id);
     }
 }

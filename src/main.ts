@@ -1,11 +1,10 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ValidationPipe } from '@nestjs/common';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { join } from 'path';
 
 async function bootstrap() {
-  const PORT = process.env.PORT ?? 3001;  
+  const PORT = process.env.PORT ?? 3002;  
   const GRPC_PORT = process.env.GPRC_PORT ?? 50051  //
 
  
