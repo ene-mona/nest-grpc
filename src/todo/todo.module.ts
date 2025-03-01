@@ -15,9 +15,8 @@ import { join } from 'path';
         options: {
           package: 'todo',
           protoPath: join(__dirname, '../../../proto/todo.proto'),
-          //url: 'localhost:50052', //colleagues
-          url: 'nest-todo-2-production.up.railway.app:50052'
-          // url: process.env.GRPC_TODO_SERVICE_URL ?? 'nest-todo-2.railway.internal:50052',
+          url: 'localhost:50052', //colleagues
+
         },
       },
     ]),
