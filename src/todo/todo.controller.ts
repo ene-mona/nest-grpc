@@ -1,30 +1,35 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post} from '@nestjs/common';
 import { TodoService } from './todo.service';
 import { Todo } from './entities/todo.entity';
 import { DeleteResult, UpdateResult } from 'typeorm';
-import { CreateTodoDto, FindOneParams, UpdateTodoDto } from './dto';
 import { GrpcMethod } from '@nestjs/microservices';
-import { Empty } from 'proto/todo';
+import { CreateTodoDto, Empty, TodoByIdDto, TodoServiceController, UpdateTodoDto, Todo as ProtoTodo } from 'proto/todo';
 
 
 @Controller('todos')
-export class TodoController {
+export class TodoController implements TodoServiceController{
     constructor(private readonly todoService: TodoService) {}
 
     // Local CRUD Operations
     @GrpcMethod('TodoService', 'CreateTodo')
-    createTodo(payload: CreateTodoDto): Promise<Todo> {
-        return this.todoService.create(payload.title);
+    async createTodo(payload: CreateTodoDto): Promise<ProtoTodo> {
+        const todo = await this.todoService.create(payload.title);
+        return { id: todo.id.toString(), title: todo.title, completed: todo.completed };
     }
 
     @GrpcMethod('TodoService', 'GetTodos')
-    getTodos(_: Empty): Promise<{ todos: Todo[] }> {
-        return this.todoService.findAll();
+    async getTodos(_: Empty): Promise<{ todos: ProtoTodo[] }> {
+        const todos = await this.todoService.findAll();
+        return { todos: todos.todos.map((todo: Todo): ProtoTodo => ({ id: todo.id.toString(), title: todo.title, completed: todo.completed })) };
     }
 
     @GrpcMethod('TodoService', 'GetTodoById')
-    getTodoById(params: FindOneParams): Promise<Todo | null> {
-        return this.todoService.findOne(params.id);
+    async getTodoById(params: TodoByIdDto): Promise<ProtoTodo> {
+        const todo = await this.todoService.findOne(params.id);
+        if (!todo) {
+            throw new Error('Todo not found');
+        }
+        return { id: todo.id.toString(), title: todo.title, completed: todo.completed };
     }
 
     @GrpcMethod('TodoService', 'UpdateTodoById')
@@ -33,7 +38,7 @@ export class TodoController {
     }
 
     @GrpcMethod('TodoService', 'DeleteTodoById')
-    deleteTodoById(params: FindOneParams): Promise<DeleteResult> {
+    deleteTodoById(params: TodoByIdDto): Promise<DeleteResult> {
         return this.todoService.deleteById(params.id);
     }
 
@@ -49,17 +54,17 @@ export class TodoController {
     }
 
     @Get(':id')
-    getRemoteTodoById(@Param('id') params: FindOneParams): Promise<Todo> {
+    getRemoteTodoById(@Param('id') params: TodoByIdDto): Promise<Todo> {
         return this.todoService.getRemoteTodoById(params.id);
     }
 
     @Post(':id')
-    updateRemoteTodoById(@Param('id') params: FindOneParams, @Body() payload: UpdateTodoDto): Promise<void> {
+    updateRemoteTodoById(@Param('id') params: TodoByIdDto, @Body() payload: UpdateTodoDto): Promise<Empty> {
         return this.todoService.updateRemoteTodoById(params.id, payload.title ?? '', payload.completed);
     }
 
     @Delete(':id')
-    deleteRemoteTodoById(@Param('id') params: FindOneParams): Promise<void> {
+    deleteRemoteTodoById(@Param('id') params: TodoByIdDto): Promise<Empty> {
         return this.todoService.deleteRemoteTodoById(params.id);
     }
 }

@@ -5,18 +5,13 @@ import { Todo } from './entities/todo.entity';
 import { ClientGrpc } from '@nestjs/microservices';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { Observable, firstValueFrom } from 'rxjs';
+import { Empty, TodoServiceClient } from 'proto/todo';
 
-interface RemoteTodoService {
-  createTodo(payload: { title: string }): Observable<Todo>;
-  getTodos(data: {}): Observable<{ todos: Todo[] }>;
-  getTodoById(data: { id: string }): Observable<Todo>;
-  updateTodoById(payload: { id: string; title: string; completed: boolean }): Observable<void>;
-  deleteTodoById(payload: { id: string }): Observable<void>;
-}
+
 
 @Injectable()
 export class TodoService implements OnModuleInit {
-  private remoteTodoService: RemoteTodoService;
+  private remoteTodoService: TodoServiceClient;
 
   constructor(
     @InjectRepository(Todo) private readonly todoRepository: Repository<Todo>,
@@ -24,7 +19,7 @@ export class TodoService implements OnModuleInit {
   ) {}
 
   onModuleInit() {
-    this.remoteTodoService = this.client.getService<RemoteTodoService>('TodoService');
+    this.remoteTodoService = this.client.getService<TodoServiceClient>('TodoService');
   }
 
   // Local CRUD operations
@@ -53,14 +48,16 @@ export class TodoService implements OnModuleInit {
     return this.todoRepository.delete(parsedId);
   }
 
-  // Remote CRUD operations
+  // // Remote CRUD operations
   async createRemoteTodo(title: string): Promise<Todo> {
-    return firstValueFrom(this.remoteTodoService.createTodo({ title }));
+    const remoteTodo = await firstValueFrom(this.remoteTodoService.createTodo({ title }));
+    return { ...remoteTodo, id: parseInt(remoteTodo.id, 10) };
   }
 
   async getRemoteTodos(): Promise<{ todos: Todo[] }> {
     const result = await firstValueFrom(this.remoteTodoService.getTodos({}));
-    return { todos: result?.todos ?? [] };
+    const todos = result?.todos.map(todo => ({ ...todo, id: parseInt(todo.id, 10) })) ?? [];
+    return { todos };
   }
 
   async getRemoteTodoById(id: string): Promise<Todo> {
@@ -68,14 +65,14 @@ export class TodoService implements OnModuleInit {
     if (!todo) {
       throw new Error(`Todo with id ${id} not found`);
     }
-    return todo;
+    return { ...todo, id: parseInt(todo.id, 10) };
   }
 
-  async updateRemoteTodoById(id: string, title: string, completed: boolean): Promise<void> {
+  async updateRemoteTodoById(id: string, title: string, completed: boolean): Promise<Empty> {
     return firstValueFrom(this.remoteTodoService.updateTodoById({ id, title, completed }));
   }
 
-  async deleteRemoteTodoById(id: string): Promise<void> {
+  async deleteRemoteTodoById(id: string): Promise<Empty> {
     return firstValueFrom(this.remoteTodoService.deleteTodoById({ id }));
   }
 }
