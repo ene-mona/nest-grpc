@@ -11,10 +11,9 @@ async function bootstrap() {
  
   const app = await NestFactory.create(AppModule);
   app.enableCors(); 
-  await app.listen(PORT);
   console.log(`✅ REST API is running on http://0.0.0.0:${PORT}`);
 
-  const grpcApp = await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, {
+  app.connectMicroservice<MicroserviceOptions>( {
     transport: Transport.GRPC,
     options: {
       onLoadPackageDefinition: (pkg, server) => {
@@ -26,7 +25,9 @@ async function bootstrap() {
     },
   });
 
-  await grpcApp.listen();
+  await app.startAllMicroservices();
+  await app.listen(PORT);
+
   console.log(`✅ gRPC Service is running on the same port: ${GRPC_PORT}`);
 }
 
