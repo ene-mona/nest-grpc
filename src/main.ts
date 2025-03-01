@@ -6,8 +6,8 @@ import { ReflectionService } from '@grpc/reflection';
 
 async function bootstrap() {
   const PORT = process.env.PORT ?? 3002;  
-  const GRPC_PORT = process.env.GPRC_PORT ?? 50051  //
-
+  //const GRPC_PORT = process.env.GPRC_PORT ?? 50051  //
+  const GRPC_PORT = PORT
  
   const app = await NestFactory.create(AppModule);
   app.enableCors(); 
