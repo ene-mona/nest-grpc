@@ -4,7 +4,7 @@ import { Repository, UpdateResult, DeleteResult } from 'typeorm';
 import { Todo } from './entities/todo.entity';
 import { ClientGrpc } from '@nestjs/microservices';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
-import { Observable, firstValueFrom } from 'rxjs';
+import {  firstValueFrom } from 'rxjs';
 import { Empty, TodoServiceClient } from 'proto/todo';
 
 
@@ -55,13 +55,13 @@ export class TodoService implements OnModuleInit {
   }
 
   async getRemoteTodos(): Promise<{ todos: Todo[] }> {
-    const result = await firstValueFrom(this.remoteTodoService.getTodos({}));
+    const result = await firstValueFrom(this.remoteTodoService.getRemoteTodos({}));
     const todos = result?.todos.map(todo => ({ ...todo, id: parseInt(todo.id, 10) })) ?? [];
     return { todos };
   }
 
   async getRemoteTodoById(id: string): Promise<Todo> {
-    const todo = await firstValueFrom(this.remoteTodoService.getTodoById({ id }));
+    const todo = await firstValueFrom(this.remoteTodoService.getRemoteTodoById({ id }));
     if (!todo) {
       throw new Error(`Todo with id ${id} not found`);
     }
@@ -69,10 +69,10 @@ export class TodoService implements OnModuleInit {
   }
 
   async updateRemoteTodoById(id: string, title: string, completed: boolean): Promise<Empty> {
-    return firstValueFrom(this.remoteTodoService.updateTodoById({ id, title, completed }));
+    return firstValueFrom(this.remoteTodoService.updateRemoteTodoById({ id, title, completed }));
   }
 
   async deleteRemoteTodoById(id: string): Promise<Empty> {
-    return firstValueFrom(this.remoteTodoService.deleteTodoById({ id }));
+    return firstValueFrom(this.remoteTodoService.deleteRemoteTodoById({ id }));
   }
 }

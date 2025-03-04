@@ -42,29 +42,31 @@ export class TodoController implements TodoServiceController{
         return this.todoService.deleteById(params.id);
     }
 
-    @Post('create')
-    createRemoteTodo(@Body() createTodoDto: CreateTodoDto): Promise<Todo> {
-        const { title } = createTodoDto;
-        return this.todoService.createRemoteTodo(title);
+    @GrpcMethod('TodoService', 'CreateRemoteTodo')
+    async createRemoteTodo(payload: CreateTodoDto): Promise<ProtoTodo> {
+        const todo = await this.todoService.createRemoteTodo(payload.title);
+        return { id: todo.id.toString(), title: todo.title, completed: todo.completed };
     }
 
-    @Get()
-    getRemoteTodos(_: Empty): Promise<{ todos: Todo[] }> {
-        return this.todoService.getRemoteTodos();
+    @GrpcMethod('TodoService', 'GetRemoteTodos')
+    async getRemoteTodos(_: Empty): Promise<{ todos: ProtoTodo[] }> {
+        const todos = await this.todoService.getRemoteTodos();
+        return { todos: todos.todos.map((todo: Todo): ProtoTodo => ({ id: todo.id.toString(), title: todo.title, completed: todo.completed })) };
     }
 
-    @Get(':id')
-    getRemoteTodoById(@Param('id') params: TodoByIdDto): Promise<Todo> {
-        return this.todoService.getRemoteTodoById(params.id);
+    @GrpcMethod('TodoService', 'GetRemoteTodoById')
+    async getRemoteTodoById(params: TodoByIdDto): Promise<ProtoTodo> {
+        const todo = await this.todoService.getRemoteTodoById(params.id);
+        return { id: todo.id.toString(), title: todo.title, completed: todo.completed };
+    }
+   
+    @GrpcMethod('TodoService', 'UpdateRemoteTodoById')
+    async updateRemoteTodoById(payload: UpdateTodoDto): Promise<Empty> {
+      return this.todoService.updateRemoteTodoById(payload.id, payload.title, payload.completed);
     }
 
-    @Post(':id')
-    updateRemoteTodoById(@Param('id') params: TodoByIdDto, @Body() payload: UpdateTodoDto): Promise<Empty> {
-        return this.todoService.updateRemoteTodoById(params.id, payload.title ?? '', payload.completed);
-    }
-
-    @Delete(':id')
-    deleteRemoteTodoById(@Param('id') params: TodoByIdDto): Promise<Empty> {
-        return this.todoService.deleteRemoteTodoById(params.id);
-    }
+    @GrpcMethod('TodoService', 'DeleteRemoteTodoById')
+  async deleteRemoteTodoById(params: TodoByIdDto): Promise<Empty> {
+    return this.todoService.deleteRemoteTodoById(params.id);
+  }
 }

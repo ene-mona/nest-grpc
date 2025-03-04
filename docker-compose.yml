@@ -1,0 +1,49 @@
+version: '3.8'
+services:
+  mysql:
+    image: mysql:8
+    container_name: mysql_todo
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 08147343536Abe
+      MYSQL_DATABASE: todo_db
+      MYSQL_USER: appuser
+      MYSQL_PASSWORD: apppassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - todo_network
+    healthcheck:  # ✅ Wait for MySQL to be fully ready before starting NestJS
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p08147343536Abe"]
+      interval: 10s
+      retries: 5
+      start_period: 20s
+
+  todo-app:
+    build: .
+    container_name: todo_app
+    restart: always
+    depends_on:
+      mysql:
+        condition: service_healthy  # ✅ Wait until MySQL is healthy before starting
+    environment:
+      PORT: 8080
+      DB_HOST: mysql  # ✅ Use the service name instead of 'localhost'
+      DB_PORT: 3306
+      DB_USERNAME: appuser
+      DB_PASSWORD: apppassword
+      DB_NAME: todo_db
+      #GRPC_PORT: 50051
+    ports:
+    - "8080:8080"  # Expose port 8080 for the REST API
+    #- "50051:50051"  # Expose port 50051 for gRPC  
+    networks:
+      - todo_network
+
+volumes:
+  mysql_data:
+
+networks:
+  todo_network:

@@ -37,10 +37,12 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "dotenv": "^16.4.7",
+    "http2-express-bridge": "^1.0.7",
     "mysql2": "^3.12.0",
     "nestjs-grpc-reflection": "^0.2.2",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
+    "spdy": "^4.0.2",
     "typeorm": "^0.3.20"
   },
   "devDependencies": {
@@ -54,6 +56,7 @@
     "@types/express": "^5.0.0",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.10.7",
+    "@types/spdy": "^3.4.9",
     "@types/supertest": "^6.0.2",
     "eslint": "^9.18.0",
     "eslint-config-prettier": "^10.0.1",

@@ -14,11 +14,11 @@ import { join } from 'path';
     TypeOrmModule.forRoot(
       {
       type: 'mysql',
-      host: process.env.DB_HOST,
+      host: process.env.DB_HOST ?? 'localhost',
       port: +(process.env.DB_PORT ?? 3306),
-      username:process.env.DB_USERNAME,
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_NAME,
+      username:process.env.DB_USERNAME || 'appuser',
+      password: process.env.DB_PASSWORD || 'apppassword',
+      database: process.env.DB_NAME || 'todo_db',
       // entities: [__dirname + '/**/*.entity{.ts,.js}'],
       autoLoadEntities: true,  // setting this to true will load entities automatically from the entities folder
       // logging: true, // setting this to true will log SQL queries in the console

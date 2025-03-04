@@ -15,7 +15,8 @@ import { join } from 'path';
         options: {
           package: 'todo',
           protoPath: join(__dirname, '../../../proto/todo.proto'),
-          url: 'localhost:50052', //colleagues
+          url: 'localhost:8081', //colleagues
+         // url:'dns:///app2-876551831298.us-central1.run.app:443'
         
         },
       },
