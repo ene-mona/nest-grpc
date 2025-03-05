@@ -55,13 +55,17 @@ export class TodoService implements OnModuleInit {
   }
 
   async getRemoteTodos(): Promise<{ todos: Todo[] }> {
-    const result = await firstValueFrom(this.remoteTodoService.getRemoteTodos({}));
+    const result = await firstValueFrom(this.remoteTodoService.getTodos({}));
+   console.log('results ',result)
     const todos = result?.todos.map(todo => ({ ...todo, id: parseInt(todo.id, 10) })) ?? [];
+   console.log('todos ',todos)
+    
     return { todos };
   }
 
   async getRemoteTodoById(id: string): Promise<Todo> {
-    const todo = await firstValueFrom(this.remoteTodoService.getRemoteTodoById({ id }));
+    
+    const todo = await firstValueFrom(this.remoteTodoService.getTodoById({ id }));
     if (!todo) {
       throw new Error(`Todo with id ${id} not found`);
     }
@@ -69,10 +73,10 @@ export class TodoService implements OnModuleInit {
   }
 
   async updateRemoteTodoById(id: string, title: string, completed: boolean): Promise<Empty> {
-    return firstValueFrom(this.remoteTodoService.updateRemoteTodoById({ id, title, completed }));
+    return firstValueFrom(this.remoteTodoService.updateTodoById({ id, title, completed }));
   }
 
   async deleteRemoteTodoById(id: string): Promise<Empty> {
-    return firstValueFrom(this.remoteTodoService.deleteRemoteTodoById({ id }));
+    return firstValueFrom(this.remoteTodoService.deleteTodoById({ id }));
   }
 }

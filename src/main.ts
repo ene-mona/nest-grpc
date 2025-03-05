@@ -39,7 +39,7 @@ async function bootstrap() {
     options: {
       package: 'todo',
       protoPath: join(__dirname, '../../proto/todo.proto'),
-      url: `0.0.0.0:${PORT}`,
+       url: `0.0.0.0:${PORT}`,
       onLoadPackageDefinition: (pkg, server) => {
         new ReflectionService(pkg).addToServer(server);
       },
