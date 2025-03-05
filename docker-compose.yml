@@ -10,12 +10,12 @@ services:
       MYSQL_USER: appuser
       MYSQL_PASSWORD: apppassword
     ports:
-      - "3306:3306"
+      - "3306:3306"  
     volumes:
-      - mysql_data:/var/lib/mysql
+      - mysql_data_todo:/var/lib/mysql  
     networks:
       - todo_network
-    healthcheck:  # ✅ Wait for MySQL to be fully ready before starting NestJS
+    healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p08147343536Abe"]
       interval: 10s
       retries: 5
@@ -27,23 +27,21 @@ services:
     restart: always
     depends_on:
       mysql:
-        condition: service_healthy  # ✅ Wait until MySQL is healthy before starting
+        condition: service_healthy
     environment:
       PORT: 8080
-      DB_HOST: mysql  # ✅ Use the service name instead of 'localhost'
+      DB_HOST: mysql
       DB_PORT: 3306
       DB_USERNAME: appuser
       DB_PASSWORD: apppassword
       DB_NAME: todo_db
-      #GRPC_PORT: 50051
     ports:
-    - "8080:8080"  # Expose port 8080 for the REST API
-    #- "50051:50051"  # Expose port 50051 for gRPC  
+      - "8080:8080"  
     networks:
       - todo_network
 
 volumes:
-  mysql_data:
+  mysql_data_todo:  
 
 networks:
-  todo_network:
+  todo_network:  

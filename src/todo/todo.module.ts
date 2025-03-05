@@ -7,6 +7,8 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 import { join } from 'path';
 import * as grpc from '@grpc/grpc-js';
 
+
+const GRPC_URL = 'dns:///teddy-todo-876551831298.us-central1.run.app:443'
 @Module({
   imports: [
     ClientsModule.register([
@@ -17,7 +19,7 @@ import * as grpc from '@grpc/grpc-js';
           package: 'todo',
           protoPath: join(__dirname, '../../../proto/todo.proto'),
          // url: 'localhost:8081', //colleagues
-          url:'dns:///app2-876551831298.us-central1.run.app:443',
+          url:GRPC_URL,
          credentials: grpc.credentials.createSsl(), 
         },
       },
@@ -25,7 +27,11 @@ import * as grpc from '@grpc/grpc-js';
     TypeOrmModule.forFeature([Todo]),
 
 ],
-  providers: [TodoService],
+  providers: [
+    TodoService,
+    { provide: 'GRPC_URL', useValue: GRPC_URL },
+
+  ],
   controllers: [TodoController]
 })
 export class TodoModule {}

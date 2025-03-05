@@ -9,15 +9,6 @@ service TodoService {
     rpc GetTodoById(TodoByIdDto) returns (Todo) {}
     rpc UpdateTodoById(UpdateTodoDto) returns (Empty) {}
     rpc DeleteTodoById(TodoByIdDto) returns (Empty) {}
-
-    //Remote
-    rpc CreateRemoteTodo(CreateTodoDto) returns (Todo) {}
-    rpc GetRemoteTodos(Empty) returns (Todos) {}
-    rpc GetRemoteTodoById(TodoByIdDto) returns (Todo) {}
-    rpc UpdateRemoteTodoById(UpdateTodoDto) returns (Empty) {}
-    rpc DeleteRemoteTodoById(TodoByIdDto) returns (Empty) {}
-
-
 }
 
 message Empty {}

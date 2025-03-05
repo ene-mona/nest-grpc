@@ -16,10 +16,12 @@ export class TodoService implements OnModuleInit {
   constructor(
     @InjectRepository(Todo) private readonly todoRepository: Repository<Todo>,
     @Inject('TODO_SERVICE') private readonly client: ClientGrpc,
+    @Inject('GRPC_URL') private readonly grpcUrl: any, 
   ) {}
 
   onModuleInit() {
     this.remoteTodoService = this.client.getService<TodoServiceClient>('TodoService');
+    console.log("📡 gRPC Client is connecting to:", this.grpcUrl);
   }
 
   // Local CRUD operations
@@ -55,13 +57,21 @@ export class TodoService implements OnModuleInit {
   }
 
   async getRemoteTodos(): Promise<{ todos: Todo[] }> {
-    const result = await firstValueFrom(this.remoteTodoService.getTodos({}));
-   console.log('results ',result)
-    const todos = result?.todos.map(todo => ({ ...todo, id: parseInt(todo.id, 10) })) ?? [];
-   console.log('todos ',todos)
+    let todos: Todo[] = [];
+    try {
+      // console.log("📡 Calling remote gRPC service at:", this.grpcConfig.options.url); // Log the target URL
+      const result = await firstValueFrom(this.remoteTodoService.getTodos({}));
+      console.log("✅ Received remote todos:", result);
+      todos = result?.todos.map(todo => ({ ...todo, id: parseInt(todo.id, 10) })) ?? [];
+    } catch (error) {
+      console.error("❌ gRPC request failed:", error);
+    }
     
     return { todos };
   }
+  
+  
+  
 
   async getRemoteTodoById(id: string): Promise<Todo> {
     
