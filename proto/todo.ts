@@ -19,12 +19,16 @@ export interface Todo {
   completed: boolean;
 }
 
-export interface CreateTodoDto {
-  title: string;
+export interface TodoList {
+  todos: Todo[];
 }
 
-export interface Todos {
-  todos: Todo[];
+export interface TodoById {
+  id: string;
+}
+
+export interface CreateTodoDto {
+  title: string;
 }
 
 export interface UpdateTodoDto {
@@ -33,43 +37,35 @@ export interface UpdateTodoDto {
   completed: boolean;
 }
 
-export interface TodoByIdDto {
-  id: string;
-}
-
 export const TODO_PACKAGE_NAME = "todo";
 
 export interface TodoServiceClient {
-  /** Local CRUD */
+  findAll(request: Empty): Observable<TodoList>;
 
-  createTodo(request: CreateTodoDto): Observable<Todo>;
+  findOne(request: TodoById): Observable<Todo>;
 
-  getTodos(request: Empty): Observable<Todos>;
+  create(request: CreateTodoDto): Observable<Todo>;
 
-  getTodoById(request: TodoByIdDto): Observable<Todo>;
+  update(request: UpdateTodoDto): Observable<Todo>;
 
-  updateTodoById(request: UpdateTodoDto): Observable<Empty>;
-
-  deleteTodoById(request: TodoByIdDto): Observable<Empty>;
+  remove(request: TodoById): Observable<Empty>;
 }
 
 export interface TodoServiceController {
-  /** Local CRUD */
+  findAll(request: Empty): Promise<TodoList> | Observable<TodoList> | TodoList;
 
-  createTodo(request: CreateTodoDto): Promise<Todo> | Observable<Todo> | Todo;
+  findOne(request: TodoById): Promise<Todo> | Observable<Todo> | Todo;
 
-  getTodos(request: Empty): Promise<Todos> | Observable<Todos> | Todos;
+  create(request: CreateTodoDto): Promise<Todo> | Observable<Todo> | Todo;
 
-  getTodoById(request: TodoByIdDto): Promise<Todo> | Observable<Todo> | Todo;
+  update(request: UpdateTodoDto): Promise<Todo> | Observable<Todo> | Todo;
 
-  updateTodoById(request: UpdateTodoDto): Promise<Empty> | Observable<Empty> | Empty;
-
-  deleteTodoById(request: TodoByIdDto): Promise<Empty> | Observable<Empty> | Empty;
+  remove(request: TodoById): Promise<Empty> | Observable<Empty> | Empty;
 }
 
 export function TodoServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["createTodo", "getTodos", "getTodoById", "updateTodoById", "deleteTodoById"];
+    const grpcMethods: string[] = ["findAll", "findOne", "create", "update", "remove"];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod("TodoService", method)(constructor.prototype[method], method, descriptor);

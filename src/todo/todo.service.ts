@@ -52,16 +52,14 @@ export class TodoService implements OnModuleInit {
 
   // // Remote CRUD operations
   async createRemoteTodo(title: string): Promise<Todo> {
-    const remoteTodo = await firstValueFrom(this.remoteTodoService.createTodo({ title }));
+    const remoteTodo = await firstValueFrom(this.remoteTodoService.create({ title }));
     return { ...remoteTodo, id: parseInt(remoteTodo.id, 10) };
   }
 
   async getRemoteTodos(): Promise<{ todos: Todo[] }> {
     let todos: Todo[] = [];
     try {
-      // console.log("📡 Calling remote gRPC service at:", this.grpcConfig.options.url); // Log the target URL
-      const result = await firstValueFrom(this.remoteTodoService.getTodos({}));
-      console.log("✅ Received remote todos:", result);
+      const result = await firstValueFrom(this.remoteTodoService.findAll({}));
       todos = result?.todos.map(todo => ({ ...todo, id: parseInt(todo.id, 10) })) ?? [];
     } catch (error) {
       console.error("❌ gRPC request failed:", error);
@@ -75,7 +73,7 @@ export class TodoService implements OnModuleInit {
 
   async getRemoteTodoById(id: string): Promise<Todo> {
     
-    const todo = await firstValueFrom(this.remoteTodoService.getTodoById({ id }));
+    const todo = await firstValueFrom(this.remoteTodoService.findOne({ id }));
     if (!todo) {
       throw new Error(`Todo with id ${id} not found`);
     }
@@ -83,10 +81,10 @@ export class TodoService implements OnModuleInit {
   }
 
   async updateRemoteTodoById(id: string, title: string, completed: boolean): Promise<Empty> {
-    return firstValueFrom(this.remoteTodoService.updateTodoById({ id, title, completed }));
+    return firstValueFrom(this.remoteTodoService.update({ id, title, completed }));
   }
 
   async deleteRemoteTodoById(id: string): Promise<Empty> {
-    return firstValueFrom(this.remoteTodoService.deleteTodoById({ id }));
+    return firstValueFrom(this.remoteTodoService.remove({ id }));
   }
 }

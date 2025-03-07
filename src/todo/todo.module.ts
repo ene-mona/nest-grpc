@@ -19,8 +19,8 @@ const GRPC_URL = 'dns:///teddy-todo-876551831298.us-central1.run.app:443'
           package: 'todo',
           protoPath: join(__dirname, '../../../proto/todo.proto'),
          // url: 'localhost:8081', //colleagues
-          url:GRPC_URL,
-         credentials: grpc.credentials.createSsl(), 
+           url: '13.61.173.179:5001',
+         credentials: grpc.credentials.createInsecure(), 
         },
       },
     ]),

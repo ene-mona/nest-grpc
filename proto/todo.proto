@@ -3,36 +3,35 @@ syntax = "proto3";
 package todo;
 
 service TodoService {
-    // Local CRUD
-    rpc CreateTodo(CreateTodoDto) returns (Todo) {}
-    rpc GetTodos(Empty) returns (Todos) {}
-    rpc GetTodoById(TodoByIdDto) returns (Todo) {}
-    rpc UpdateTodoById(UpdateTodoDto) returns (Empty) {}
-    rpc DeleteTodoById(TodoByIdDto) returns (Empty) {}
+  rpc FindAll (Empty) returns (TodoList) {}
+  rpc FindOne (TodoById) returns (Todo) {}
+  rpc Create (CreateTodoDto) returns (Todo) {}
+  rpc Update (UpdateTodoDto) returns (Todo) {}
+  rpc Remove (TodoById) returns (Empty) {}
 }
 
 message Empty {}
 
 message Todo {
-    string id = 1;
-    string title = 2;
-    bool completed = 3;
+  string id = 1;
+  string title = 2;
+  bool completed = 3;
+}
+
+message TodoList {
+  repeated Todo todos = 1;
+}
+
+message TodoById {
+  string id = 1;
 }
 
 message CreateTodoDto {
-    string title = 1;
-}
-
-message Todos {
-    repeated Todo todos = 1;
+  string title = 1;
 }
 
 message UpdateTodoDto {
-    string id = 1;
-    string title = 2;
-    bool completed = 3;
-}
-
-message TodoByIdDto {
-    string id = 1;
+  string id = 1;
+  string title = 2;
+  bool completed = 3;
 }
